@@ -1,0 +1,135 @@
+[submodule "apr"]
+	path = apr
+	url = https://github.com/tux-mind/platform_external_apr.git
+[submodule "arpspoof"]
+	path = arpspoof
+	url = https://github.com/evilsocket/dsploit-arpspoof.git
+[submodule "cSploitCommon"]
+	path = cSploitCommon
+	url = git@github.com:cSploit/common.git
+[submodule "ettercap-ng"]
+	path = ettercap-ng
+	url = https://github.com/tux-mind/platform_external_ettercap.git
+[submodule "freetds"]
+	path = freetds
+	url = https://github.com/tux-mind/platform_external_freetds.git
+[submodule "hydra"]
+	path = hydra
+	url = https://github.com/vanhauser-thc/thc-hydra.git
+[submodule "libbthread"]
+	path = libbthread
+	url = https://github.com/tux-mind/libbthread.git
+[submodule "libcurl"]
+	path = libcurl
+	url = https://github.com/tux-mind/platform_external_libcurl.git
+[submodule "libexpat"]
+	path = libexpat
+	url = https://github.com/tux-mind/libexpat.git
+[submodule "libidn"]
+	path = libidn
+	url = https://github.com/tux-mind/platform_external_libidn.git
+[submodule "libmysqlclient"]
+	path = libmysqlclient
+	url = https://github.com/tux-mind/platform_external_libmysqlclient.git
+[submodule "libneon"]
+	path = libneon
+	url = https://github.com/tux-mind/platform_external_libneon.git
+[submodule "libpcap"]
+	path = libpcap
+	url = https://github.com/android/platform_external_libpcap.git
+[submodule "libreadline"]
+	path = libreadline
+	url = https://github.com/tux-mind/platform_external_libreadline.git
+[submodule "libtommath"]
+	path = libtommath
+	url = https://github.com/tux-mind/libtommath.git
+[submodule "libxslt"]
+	path = libxslt
+	url = https://github.com/tux-mind/platform_external_libxslt.git
+[submodule "ncurses"]
+	path = ncurses
+	url = https://github.com/tux-mind/platform_external_ncurses.git
+[submodule "nmap"]
+	path = nmap
+	url = https://github.com/tux-mind/platform_external_nmap.git
+[submodule "openssl"]
+	path = openssl
+	url = https://github.com/android/platform_external_openssl.git
+[submodule "ruby"]
+	path = ruby
+	url = https://github.com/tux-mind/ruby.git
+[submodule "subversion"]
+	path = subversion
+	url = https://github.com/tux-mind/platform_external_subversion.git
+[submodule "thomson"]
+	path = thomson
+	url = https://github.com/evilsocket/dsploit-thomson.git
+[submodule "apr-util"]
+	path = apr-util
+	url = https://github.com/tux-mind/platform_external_apr-util.git
+[submodule "bdb"]
+	path = bdb
+	url = https://github.com/tux-mind/platform_external_bdb.git
+[submodule "cSploitDaemon"]
+	path = cSploitDaemon
+	url = https://github.com/cSploit/daemon.git
+[submodule "firebird"]
+	path = firebird
+	url = https://github.com/tux-mind/platform_external_firebird.git
+[submodule "fusemounts"]
+	path = fusemounts
+	url = https://github.com/tux-mind/fusemounts.git
+[submodule "icu4c"]
+	path = icu4c
+	url = https://github.com/tux-mind/platform_external_icu4c.git
+[submodule "libcares"]
+	path = libcares
+	url = https://github.com/tux-mind/c-ares.git
+[submodule "libedit"]
+	path = libedit
+	url = https://github.com/tux-mind/platform_external_libedit.git
+[submodule "libiconv"]
+	path = libiconv
+	url = https://github.com/tux-mind/platform_external_libiconv.git
+[submodule "libifaddrs"]
+	path = libifaddrs
+	url = https://github.com/tux-mind/platform_external_libifaddrs.git
+[submodule "libncp"]
+	path = libncp
+	url = https://github.com/tux-mind/platform_external_libncp.git
+[submodule "libnet"]
+	path = libnet
+	url = https://github.com/tux-mind/libnet.git
+[submodule "libpcre"]
+	path = libpcre
+	url = https://github.com/tux-mind/platform_external_libpcre.git
+[submodule "libssh"]
+	path = libssh
+	url = https://github.com/tux-mind/platform_external_libssh.git
+[submodule "libxml2"]
+	path = libxml2
+	url = https://github.com/tux-mind/platform_external_libxml2.git
+[submodule "libyaml"]
+	path = libyaml
+	url = https://github.com/tux-mind/libyaml.git
+[submodule "network-radar"]
+	path = network-radar
+	url = git@github.com:cSploit/network-radar.git
+[submodule "openldap"]
+	path = openldap
+	url = https://github.com/tux-mind/platform_external_openldap.git
+[submodule "postgresql"]
+	path = postgresql
+	url = https://github.com/tux-mind/platform_external_postgresql.git
+[submodule "sqlite"]
+	path = sqlite
+	url = https://github.com/android/platform_external_sqlite.git
+[submodule "tcpdump"]
+	path = tcpdump
+	url = https://github.com/android/platform_external_tcpdump.git
+[submodule "unixODBC"]
+	path = unixODBC
+	url = https://github.com/tux-mind/platform_external_unixODBC.git
+[submodule "zlib"]
+	path = zlib
+	url = https://github.com/tux-mind/platform_external_zlib.git
