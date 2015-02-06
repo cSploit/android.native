@@ -4,7 +4,7 @@ oldpwd=$(pwd)
 
 UPDATE_SERVER="http://update.csploit.org/"
 RUBY_VERSION=1.0.0
-CORE_VERSION=1.0.0
+CORE_VERSION=1.0.1
 
 die() {
 	echo "FAILED"
@@ -101,7 +101,7 @@ check_ndk() {
 build_core() {
   app_root=$(readlink -f ../)
   
-  ndk_args="V=1 APP_OPTIM=debug NDK_DEBUG=1 " # debug
+  ndk_args="APP_OPTIM=debug NDK_DEBUG=1 " # debug
   ndk_args+="APP_PLATFORM=android-${api} " # force android api level 
   ndk_args+="NDK_OUT=${app_root}/obj/android-${api} " # objects directory
 
@@ -170,6 +170,7 @@ pack_core() {
   rsync -aq "${jni_root}/nmap/scripts/" "${out}/tools/nmap/scripts/" >&3 2>&1 || die
 
   cp "${jni_root}/known-issues/start_daemon.sh" "${out}/"
+  chmod 700 "${out}/start_daemon.sh"
 
   echo -ne "ok\n[core] -  copying configuration/database files..."
   for f in $nmap_data; do
