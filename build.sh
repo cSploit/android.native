@@ -98,6 +98,12 @@ check_ndk() {
   done
 }
 
+delete_core_packages() {
+  for f in ../dist/core* ; do
+    rm "$f"
+  done
+}
+
 build_core() {
   app_root=$(readlink -f ../)
   
@@ -207,12 +213,18 @@ pack_core() {
 }
 
 build_cores() {
-  for api in 9 16; do
+  
+  delete_core_packages
+  
+  for api in 16 9; do
     build_core
     for abi in armeabi armeabi-v7a; do
-      copy_java_libs
       pack_core
     done
+  done
+  
+  for abi in armeabi armeabi-v7a; do
+    copy_java_libs
   done
 }
 
