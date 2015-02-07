@@ -30,7 +30,7 @@ create_archive_metadata() {
   "version" : $3,
   "archiver" : "$4",
   "compression" : "$5",
-  "platform" : "android-${api}_${abi}",
+  "platform" : "android${api}.${abi}",
   "md5" : "${md5}",
   "sha1" : "${sha1}"
 }
@@ -132,7 +132,7 @@ copy_java_libs() {
 
 pack_core() {
   echo
-  echo "[core] building android-${api}_${abi} package"
+  echo "[core] building android${api}.${abi} package"
   
   jni_root=$(readlink -f ./)
   out="/tmp/cSploitCore"
@@ -193,7 +193,7 @@ pack_core() {
     mkdir ../dist >&3 2>&1 || die
   fi
   
-  core_basename="core-v${CORE_VERSION}+android-${api}_${abi}"
+  core_basename="core-v${CORE_VERSION}+android${api}.${abi}"
   core_path="../dist/${core_basename}.tar.xz"
   core_json="../dist/${core_basename}.json"
   
