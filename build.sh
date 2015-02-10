@@ -124,8 +124,8 @@ build_core() {
 }
 
 copy_java_libs() {
-  javaLibs=$(readlink -f ../src/main/jniLibs/${abi}/)
-  bins=$(readlink -f ../libs/${abi})
+  javaLibs=$(readlink -fm ../src/main/jniLibs/${abi}/)
+  bins=$(readlink -fm ../libs/${abi})
   
   echo
   echo -n "[core] copying ${abi} libs to java project..."
