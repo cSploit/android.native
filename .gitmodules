@@ -6,7 +6,7 @@
 	url = https://github.com/evilsocket/dsploit-arpspoof.git
 [submodule "cSploitCommon"]
 	path = cSploitCommon
-	url = git@github.com:cSploit/common.git
+	url = https://github.com/cSploit/common.git
 [submodule "ettercap-ng"]
 	path = ettercap-ng
 	url = https://github.com/tux-mind/platform_external_ettercap.git
@@ -114,7 +114,7 @@
 	url = https://github.com/tux-mind/libyaml.git
 [submodule "network-radar"]
 	path = network-radar
-	url = git@github.com:cSploit/network-radar.git
+	url = https://github.com/cSploit/network-radar.git
 [submodule "openldap"]
 	path = openldap
 	url = https://github.com/tux-mind/platform_external_openldap.git
