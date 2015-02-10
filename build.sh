@@ -77,8 +77,10 @@ directories="/enc/trans/
 /mathn/
 /racc/
 /"
-api="9"
-abi="armeabi"
+apis="9
+16"
+abis="armeabi
+armeabi-v7a"
 
 check_ndk() {
   ndk_build=$(which ndk-build) || \
@@ -123,15 +125,60 @@ build_core() {
   echo "ok"
 }
 
-copy_java_libs() {
-  javaLibs=$(readlink -fm ../src/main/jniLibs/${abi}/)
+select_lower_api() {
+  api="0"
+  
+  for _api in $apis; do
+    test ${_api} -lt ${api} -o ${api} -eq 0 && api="${_api}"
+  done
+}
+
+build_jni_libs() {
+  app_root=$(readlink -f ../)
   bins=$(readlink -fm ../libs/${abi})
   
-  echo
-  echo -n "[core] copying ${abi} libs to java project..."
+  ndk_args="APP_OPTIM=debug NDK_DEBUG=1 " # debug
+  ndk_args+="APP_PLATFORM=android-${api} " # force android api level 
+  ndk_args+="NDK_OUT=${app_root}/obj/android-${api} " # objects directory
   
-  { test -d "${javaLibs}" || mkdir -p "${javaLibs}" ;} >&3 2>&1 || die
-  cp "${bins}/libcSploitClient.so" "${bins}/libcSploitCommon.so" "${javaLibs}" >&3 2>&1 || die
+  ndk_targets="cSploitCommon cSploitClient"
+  
+  strip=$( ndk-which strip ) 2>&3 || die
+
+  echo -n "[jni] compiling for android-${api}..."
+  
+  cpus=$(grep -E "^processor" /proc/cpuinfo | wc -l)
+  
+  ndk-build $ndk_args -j${cpus} $ndk_targets >&3 2>&1 || die
+  
+  echo -ne "ok\n[jni] installing into libs..."
+  
+  for abi in $abis; do 
+    objs="${app_root}/obj/android-${api}/local/${abi}"
+    
+    for lib in cSploitCommon cSploitClient; do
+      install -p "${objs}/lib${lib}.so" "${bins}/lib${lib}.so" >&3 2>&1 || die
+      ${strip} --strip-unneeded "${bins}/lib${lib}.so" >&3 2>&1 || die
+    done
+  done
+  
+  echo "ok"
+}
+
+copy_jni_libs() {
+  
+  select_lower_api
+  
+  echo -n "[jni] copying libs to java project..."
+  
+  for abi in $abis; do
+    javaLibs=$(readlink -fm ../src/main/jniLibs/${abi}/)
+    bins=$(readlink -fm ../libs/${abi})
+    
+    { test -d "${javaLibs}" || mkdir -p "${javaLibs}" ;} >&3 2>&1 || die
+    cp "${bins}/libcSploitClient.so" "${bins}/libcSploitCommon.so" "${javaLibs}" >&3 2>&1 || die
+  
+  done
   
   echo "ok"
 }
@@ -214,18 +261,22 @@ pack_core() {
 
 build_cores() {
   
+  check_ndk
   delete_core_packages
   
-  for api in 16 9; do
+  for api in $apis; do
     build_core
-    for abi in armeabi armeabi-v7a; do
+    for abi in $abis; do
       pack_core
     done
   done
+}
+
+build_jni() {
+  check_ndk
+  select_lower_api
   
-  for abi in armeabi armeabi-v7a; do
-    copy_java_libs
-  done
+  build_jni_libs
 }
 
 
@@ -316,7 +367,7 @@ build_ruby() {
   echo "ok"
 }
 
-pkg="cores"
+pkg="jni"
 
 test "$#" -ne 1 || pkg=$1
 
@@ -324,6 +375,10 @@ case $pkg in
 ruby) build_ruby
   ;;
 core|cores) build_cores
+            copy_jni_libs
+  ;;
+jni) build_jni
+     copy_jni_libs
   ;;
 *)
   scriptname=$(basename "$0")
