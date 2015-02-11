@@ -135,7 +135,6 @@ select_lower_api() {
 
 build_jni_libs() {
   app_root=$(readlink -f ../)
-  bins=$(readlink -fm ../libs/${abi})
   
   ndk_args="APP_OPTIM=debug NDK_DEBUG=1 " # debug
   ndk_args+="APP_PLATFORM=android-${api} " # force android api level 
@@ -155,6 +154,7 @@ build_jni_libs() {
   
   for abi in $abis; do 
     objs="${app_root}/obj/android-${api}/local/${abi}"
+    bins=$(readlink -fm ../libs/${abi})
     
     for lib in cSploitCommon cSploitClient; do
       install -p "${objs}/lib${lib}.so" "${bins}/lib${lib}.so" >&3 2>&1 || die
