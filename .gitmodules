@@ -57,7 +57,7 @@
 	url = https://github.com/android/platform_external_openssl.git
 [submodule "ruby"]
 	path = ruby
-	url = https://github.com/tux-mind/ruby.git
+	url = https://github.com/cSploit/android.native.ruby.git
 [submodule "subversion"]
 	path = subversion
 	url = https://github.com/tux-mind/platform_external_subversion.git
