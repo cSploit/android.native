@@ -17,26 +17,6 @@ die() {
 	exit 1
 }
 
-create_archive_metadata() {
-  md5=$(md5sum "$1" 2>&3 | grep -oE "[0-9a-f]{32}")
-  test -n "${md5}" || die
-  sha1=$(sha1sum "$1" 2>&3 | grep -oE "[0-9a-f]{40}")
-  test -n "${sha1}" || die
-  filename=$(basename "$1")
-  cat > "$2" 2>&3 <<EOF
-{
-  "url" : "${UPDATE_SERVER}${filename}",
-  "name" : "${filename}",
-  "version" : $3,
-  "archiver" : "$4",
-  "compression" : "$5",
-  "platform" : "android${api}.${abi}",
-  "md5" : "${md5}",
-  "sha1" : "${sha1}"
-}
-EOF
-}
-
 test -d "${oldpwd}" || die
 
 exec 3> build.log
@@ -101,9 +81,11 @@ check_ndk() {
 }
 
 delete_core_packages() {
-  for f in ../dist/core* ; do
-    rm "$f"
-  done
+  find ../dist/ -name "core*" -type f -exec rm "{}" \;
+}
+
+delete_ruby_packages() {
+  find ../dist/ -name "ruby*" -type f -exec rm "{}" \;
 }
 
 build_core() {
@@ -252,15 +234,10 @@ pack_core() {
   
   mv /tmp/core.tar.xz $core_path >&3 2>&1 || die
   
-  echo -ne "ok\n[core] -  creating archive manifest..."
-  
-  create_archive_metadata $core_path $core_json $CORE_VERSION tar xz
-  
   echo "ok"
 }
 
 build_cores() {
-  
   check_ndk
   delete_core_packages
   
@@ -272,6 +249,18 @@ build_cores() {
   done
 }
 
+build_ruby() {
+  check_ndk
+  delete_ruby_packages
+  
+  for api in $apis; do
+    build_core
+    for abi in $abis; do
+      pack_ruby
+    done
+  done
+}
+
 build_jni() {
   check_ndk
   select_lower_api
@@ -279,62 +268,75 @@ build_jni() {
   build_jni_libs
 }
 
-
-build_ruby() {
-  echo -e "*** creating ruby package ***"
-
+pack_ruby() {
   system_ruby=""
-
+  
+  echo
+  echo "[ruby] building android${api}.${abi} package"
+  
   for bin in ruby ruby19; do 
     bin=$(which "$bin")
-    test -n "$bin" && grep -q "1.9" <<<$($bin -v) && system_ruby="${bin}"
+    
+    test -n "$bin" && { $bin -v | grep -q "1.9" ;} && system_ruby="${bin}"
   done
 
   test -n "${system_ruby}" || { echo "ruby 1.9 not found" >&2; echo "ruby 1.9 not found" >&3; die ;}
 
-  echo -n "creating rubyroot..."
+  echo -n "[ruby]   - creating root..."
 
   rm -rf rubyroot >&3 2>&1 || die
   rubyroot=$(readlink -f rubyroot) || die
   echo "rubyroot='${rubyroot}'" >&3
   test -n "${rubyroot}" || die
+  
   for d in $directories; do
     echo "making \`${rubyroot}/lib/ruby/1.9.1/arm-linux-androideabi$d'" >&3
     mkdir -p "${rubyroot}/lib/ruby/1.9.1/arm-linux-androideabi$d" >&3 2>&1 || die
   done
+  
   mkdir -p "${rubyroot}/lib/ruby/site_ruby/1.9.1/arm-linux-androideabi" || die
   mkdir -p "${rubyroot}/lib/ruby/vendor_ruby/1.9.1/arm-linux-androideabi" || die
   mkdir -p "${rubyroot}/bin" >&3 2>&1 || die
   mkdir -p "${rubyroot}/etc" >&3 2>&1 || die
   mkdir -p "${rubyroot}/home/ruby" >&3 2>&1 || die
-  echo -ne "ok\ndisabling documentation install for gems..."
+  
+  echo -ne "ok\n[ruby]   - disabling documentation when installing gems..."
+  
   echo -e 'install: --no-document\nupdate: --no-document' > "${rubyroot}/etc/gemrc" 2>&3 || die
   cp "${rubyroot}/etc/gemrc" "${rubyroot}/home/ruby/.gemrc" || die
-  echo -ne "ok\ncopying binaries..."
+  
+  echo -ne "ok\n[ruby]   - copying binaries..."
+  
   rsync -va ruby/bin/ rubyroot/bin/ >&3 2>&1 || die
   for prog in clear infocmp tabs tic toe tput; do
-    cp "../libs/armeabi/${prog}" "${rubyroot}/bin/" >&3 2>&1 || die
+    cp "../libs/${abi}/${prog}" "${rubyroot}/bin/" >&3 2>&1 || die
   done
-  cp ../libs/armeabi/ruby "${rubyroot}/bin/" >&3 2>&1 || die
-  echo -ne "ok\ncopying libraries..."
+  cp "../libs/${abi}/ruby" "${rubyroot}/bin/" >&3 2>&1 || die
+  
+  echo -ne "ok\n[ruby]   - copying libraries..."
+  
   for d in $directories; do
     base="libRUBY${d//\//_}"
     search_name="${base}*.so"
     dest="${oldpwd}/rubyroot/lib/ruby/1.9.1/arm-linux-androideabi$d"
-    find "${oldpwd}/../libs/armeabi/" -name "${search_name}" | while read file; do
+    find "${oldpwd}/../libs/${abi}/" -name "${search_name}" | while read file; do
       newname=$(basename "$file")
       newname=${newname/$base/}
       echo "copying \`${file}' to \`${dest}${newname}'" >&3
       cp "$file" "${dest}${newname}" >&3 2>&1|| die
     done
   done
-  echo -ne "ok\ncopying script libraries..." 
+  
+  echo -ne "ok\n[ruby]   - copying script libraries..." 
+  
   cd ruby/lib >&3 2>&1 || die
   ( find . -name "*.rb" -print0 | rsync -va --files-from=- --from0 ./ ../../rubyroot/lib/ruby/1.9.1/ ) >&3 2>&1  || die
   cd ../.ext/common >&3 2>&1 || die
   ( find . -name "*.rb" -print0 | rsync -va --files-from=- --from0 ./ ../../../rubyroot/lib/ruby/1.9.1/ ) >&3 2>&1 || die
   cp "${oldpwd}/ruby/rbconfig.rb" "${rubyroot}/lib/ruby/1.9.1/arm-linux-androideabi/" >&3 2>&1 || die
-  echo -ne "ok\nupdating rubygems..."
+  
+  echo -ne "ok\n[ruby]   - updating rubygems..."
+  
   echo -e "require 'arm-linux-androideabi/rbconfig'" > "${rubyroot}/lib/ruby/1.9.1/rbconfig.rb" 2>&3 || die
   unset RUBYOPT
   export RUBYLIB="${rubyroot}/lib/ruby/site_ruby/1.9.1:${rubyroot}/lib/ruby/site_ruby:${rubyroot}/lib/ruby/vendor_ruby/1.9.1:${rubyroot}/lib/ruby/vendor_ruby:${rubyroot}/lib/ruby/1.9.1"
@@ -350,19 +352,15 @@ build_ruby() {
   mv "${rubyroot}/bin/ruby.arm" "${rubyroot}/bin/ruby" >&3 2>&1 || die
   cd "${rubyroot}"
   sed -i "1s,^#!${rubyroot}/bin/ruby,#!/usr/bin/env ruby," $(find . -type f) >&3 2>&1 || die
-  echo -ne "ok\ncreating archive..."
+  
+  echo -ne "ok\n[ruby]   - creating archive..."
+  
   cd "${oldpwd}"
-
   mkdir -p ../dist >&3 2>&1 || die
-
   cd rubyroot
-  tar -cJf ../../dist/ruby.tar.xz . >&3 2>&1 || die
+  tar -cJf "../../dist/ruby-${RUBY_VERSION}+android${api}.${abi}.tar.xz" . >&3 2>&1 || die
   cd "${oldpwd}"
   rm -rf rubyroot
-
-  echo -ne "ok\ncreating archive manifest..."
-
-  create_archive_metadata ../dist/ruby.tar.xz ../dist/ruby.json $RUBY_VERSION tar xz
   
   echo "ok"
 }
