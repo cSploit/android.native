@@ -18,7 +18,7 @@ while read issue; do
 
   echo "issue #$issue found" >&3
 
-  case issue in
+  case $issue in
     1)
        if [ ! -f "/cSploit/cSploitd" ]; then
           mount -o remount,rw / 2>&3 || die1 "remount rw failed"
