@@ -69,9 +69,27 @@ inline child_node *get_child_by_pending_seq(uint16_t seq) {
   return c;
 }
 
-void free_child(child_node *c) {
+inline void free_child(child_node *c) {
   release_buffer(&(c->buffer));
   free(c);
+}
+
+void free_all_childs() {
+  child_node *c,*n;
+  
+  pthread_mutex_lock(&(children.control.mutex));
+  
+  c=(child_node *) children.list.head;
+  
+  children.list.head = children.list.tail = NULL;
+  
+  while(c) {
+    n=(child_node *) c->next;
+    free_child(c);
+    c=n;
+  }
+  
+  pthread_mutex_unlock(&(children.control.mutex));
 }
 
 /**

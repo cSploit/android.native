@@ -339,6 +339,34 @@ int on_message(JNIEnv *env, message *m) {
   
 }
 
+/**
+ * @brief notify java that all childs has been killed
+ */
+void notifier_on_disconnect(JNIEnv *env) {
+  jobject event;
+  child_node *c;
+  
+  pthread_mutex_lock(&(children.control.mutex));
+  for(c=(child_node *)children.list.head;c;c=(child_node *)c->next) {
+    event = create_child_died_event(env, SIGKILL);
+    
+    pthread_mutex_unlock(&(children.control.mutex));
+    
+    if(!event) {
+      LOGE("%s: cannot create event", __func__);
+    } else if(send_event(env, c, event)) {
+      LOGE("%s: cannot send event", __func__);
+    }
+    
+    if(event) {
+      (*env)->DeleteLocalRef(env, event);
+    }
+    
+    pthread_mutex_lock(&(children.control.mutex));
+  }
+  pthread_mutex_unlock(&(children.control.mutex));
+}
+
 void *notifier(void *arg) {
   msg_node *mn;
   message *m;

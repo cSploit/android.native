@@ -32,6 +32,8 @@
 #include "notifier.h"
 #include "handler.h"
 #include "auth.h"
+#include "child.h"
+#include "command.h"
 
 #include "connection.h"
 
@@ -43,8 +45,13 @@ void on_connect() {
   auth_on_connect();
 }
 
-void on_disconnect() {
+void on_disconnect(JNIEnv *env) {
   auth_on_disconnect();
+  cmd_on_disconnect();
+  notifier_on_disconnect(env);
+  
+  free_all_childs();
+  unload_handlers();
 }
 
 /**
@@ -138,7 +145,7 @@ jboolean is_unix_connected(JNIEnv *env _U_, jclass clazz _U_) {
 /**
  * @brief disconnect from UNIX socket
  */
-void disconnect_unix(JNIEnv *env _U_, jclass clazz _U_) {
+void disconnect_unix(JNIEnv *env, jclass clazz _U_) {
   
   if(!connected)
     return;
@@ -155,7 +162,5 @@ void disconnect_unix(JNIEnv *env _U_, jclass clazz _U_) {
   
   connected = 0;
   
-  on_disconnect();
-  
-  unload_handlers();
+  on_disconnect(env);
 }

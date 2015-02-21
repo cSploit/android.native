@@ -134,16 +134,16 @@ jobject create_child_end_event(JNIEnv *env, void *arg) {
 
 /**
  * @brief create an org.csploit.android.events.ChildDied
- * @param arg a poitner to the signal that caused the death
+ * @param signal the signal number that caused the death
  * @returns the jobject on success, NULL on error.
  */
-jobject create_child_died_event(JNIEnv *env, void *arg) {
+jobject create_child_died_event(JNIEnv *env, int signal) {
   jobject event;
   
   event = (*env)->NewObject(env,
                             cache.csploit.events.child_died.class,
                             cache.csploit.events.child_died.ctor,
-                            *((unsigned int *) arg));
+                            signal);
   
   if(event)
     return event;

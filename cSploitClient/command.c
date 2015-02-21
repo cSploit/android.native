@@ -34,6 +34,28 @@
 
 #include "command.h"
 
+
+void cmd_on_disconnect() {
+  child_node *c;
+  char found = 0;
+  
+  pthread_mutex_lock(&(children.control.mutex));
+  
+  for(c =(child_node *) children.list.head;c;c=(child_node *) c->next) {
+    if(c->pending) {
+      c->seq = 0;
+      c->id = CTRL_ID;
+      found = 1;
+    }
+  }
+  
+  pthread_mutex_unlock(&(children.control.mutex));
+  
+  if(found) {
+    pthread_cond_broadcast(&(children.control.cond));
+  }
+}
+
 int on_cmd_started(message *m) {
   struct cmd_started_info *started_info;
   child_node *c;
@@ -160,7 +182,7 @@ int on_cmd_died(JNIEnv *env, message *m) {
   
   pthread_cond_broadcast(&(children.control.cond));
   
-  event = create_child_died_event(env, &(died_info->signal));
+  event = create_child_died_event(env, died_info->signal);
   
   if(!event) {
     LOGE("%s: cannot create event", __func__);

@@ -49,6 +49,7 @@ child_node *create_child(uint16_t );
 inline child_node *get_child_by_id(uint16_t );
 inline child_node *get_child_by_pending_seq(uint16_t);
 void free_child(child_node *);
+void free_all_childs(void);
 extern jboolean send_to_child(JNIEnv *, jclass, int, jbyteArray);
 
 #endif

@@ -18,7 +18,10 @@
 #ifndef NOTIFIER_H
 #define NOTIFIER_H
 
+#include <jni.h>
+
 int start_notifier(void);
 void stop_notifier(void);
+void notifier_on_disconnect(JNIEnv *);
 
 #endif
