@@ -39,6 +39,7 @@
 #include "tcpdump.h"
 #include "fusemounts.h"
 #include "network-radar.h"
+#include "msfrpcd.h"
 
 #include "notifier.h"
 
@@ -112,7 +113,7 @@ int on_ettercap(JNIEnv *env, child_node *c, message *m) {
   ret = -1;
   
   switch(m->data[0]) {
-    case READY:
+    case ETTERCAP_READY:
       event = create_ready_event(env, m);
       break;
     case ACCOUNT:
@@ -293,6 +294,35 @@ int on_netradar(JNIEnv *env, child_node *c, message *m) {
   return ret;
 }
 
+int on_msfrpcd(JNIEnv *env, child_node *c, message *m) {
+  jobject event;
+  int ret;
+  
+  ret = -1;
+  
+  switch(m->data[0]) {
+    case MSFRPCD_READY:
+      event = create_ready_event(env, m);
+      break;
+    default:
+      LOGW("%s: unkown msfrpcd action: %02hhX", __func__, m->data[0]);
+      return -1;
+  }
+  
+  if(!event) {
+    LOGE("%s: cannot create event", __func__);
+  } else if(send_event(env, c, event)) {
+    LOGE("%s: cannot send event", __func__);
+  } else {
+    ret = 0;
+  }
+  
+  if(event)
+    (*env)->DeleteLocalRef(env, event);
+  
+  return ret;
+}
+
 int on_message(JNIEnv *env, message *m) {
   child_node *c;
   int ret;
@@ -331,6 +361,8 @@ int on_message(JNIEnv *env, message *m) {
     ret = on_fusemounts(env, c, m);
   } else if( c->handler == handlers.by_name.network_radar) {
     ret = on_netradar(env, c, m);
+  } else if( c->handler == handlers.by_name.msfrpcd) {
+    ret = on_msfrpcd(env, c, m);
   } else {
     LOGW("%s: unkown handler: \"%s\" ( #%u )", __func__, c->handler->name, c->handler->id);
   }

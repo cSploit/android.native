@@ -199,6 +199,8 @@ int on_handler_list(message *m) {
       handlers.by_name.fusemounts = h;
     } else if(!handlers.by_name.network_radar && !strncmp(h->name, "network-radar", 14)) {
       handlers.by_name.network_radar = h;
+    } else if(!handlers.by_name.msfrpcd && !strncmp(h->name, "msfrpcd", 8)) {
+      handlers.by_name.msfrpcd = h;
     }
     
     h->id = handler_info->id;

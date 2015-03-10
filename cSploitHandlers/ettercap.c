@@ -84,7 +84,7 @@ message *parse_ettercap_ready(char *line) {
     return NULL;
   }
   
-  m->data[0] = READY;
+  m->data[0] = ETTERCAP_READY;
   
   return m;
 }
