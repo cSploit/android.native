@@ -130,8 +130,8 @@ int init_csploit_events_cache(JNIEnv *env) {
     { "org/csploit/android/events/Account", "(Ljava/net/InetAddress;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V" },
     { "org/csploit/android/events/Message", "(Ljava/lang/String;Ljava/lang/String;)V" },
     { "org/csploit/android/events/Login", "(ILjava/net/InetAddress;Ljava/lang/String;Ljava/lang/String;)V" },
-    { "org/csploit/android/events/Attempts", "(JJJJJ)V" },
-    { "org/csploit/android/events/Packet", "(Ljava/net/InetAddress;Ljava/net/InetAddress;S)V" },
+    { "org/csploit/android/events/Attempts", "(JJJJ)V" },
+    { "org/csploit/android/events/Packet", "(Ljava/net/InetAddress;Ljava/net/InetAddress;I)V" },
     { "org/csploit/android/events/FuseBind", "(Ljava/lang/String;Ljava/lang/String;)V" },
     { "org/csploit/android/events/Host", "([BLjava/net/InetAddress;Ljava/lang/String;)V" },
     { "org/csploit/android/events/HostLost", "(Ljava/net/InetAddress;)V" },
@@ -240,6 +240,15 @@ void _free_cache(JNIEnv *env) {
     &(cache.csploit.events.hop.class),
     &(cache.csploit.events.port.class),
     &(cache.csploit.events.os.class),
+    &(cache.csploit.events.ready.class),
+    &(cache.csploit.events.account.class),
+    &(cache.csploit.events.message.class),
+    &(cache.csploit.events.login.class),
+    &(cache.csploit.events.attempts.class),
+    &(cache.csploit.events.packet.class),
+    &(cache.csploit.events.fusebind.class),
+    &(cache.csploit.events.host.class),
+    &(cache.csploit.events.hostlost.class),
   };
   
   for(i=0;i<NUMELEM(global_refs); i++) {

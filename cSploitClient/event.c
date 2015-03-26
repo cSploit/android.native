@@ -120,7 +120,7 @@ jobject create_child_end_event(JNIEnv *env, void *arg) {
   event = (*env)->NewObject(env,
                             cache.csploit.events.child_end.class,
                             cache.csploit.events.child_end.ctor,
-                            *((uint8_t *) arg));
+                            (jint) *((uint8_t *) arg));
   
   if(event)
     return event;
@@ -203,7 +203,7 @@ jobject create_hop_event(JNIEnv *env, void *arg) {
   res = (*env)->NewObject(env,
                           cache.csploit.events.hop.class,
                           cache.csploit.events.hop.ctor,
-                          hop_info->hop, hop_info->usec, addr);
+                          hop_info->hop, (jlong)(hop_info->usec), addr);
   
   (*env)->DeleteLocalRef(env, addr);
   
@@ -272,7 +272,8 @@ jobject create_port_event(JNIEnv *env, void *arg) {
   res = (*env)->NewObject(env,
                           cache.csploit.events.port.class,
                           cache.csploit.events.port.ctor,
-                          jproto, service_info->port, jservice, jversion);
+                          jproto, (jint)(service_info->port),
+                          jservice, jversion);
   
   cleanup:
   
@@ -323,7 +324,7 @@ jobject create_os_event(JNIEnv *env, void *arg) {
   res = (*env)->NewObject(env,
                           cache.csploit.events.os.class,
                           cache.csploit.events.os.ctor,
-                          os_info->accuracy, jos, jtype);
+                          (jshort)(os_info->accuracy), jos, jtype);
   
   cleanup:
   
@@ -491,16 +492,28 @@ jobject create_message_event(JNIEnv *env, message *m) {
  */
 jobject create_attempts_event(JNIEnv *env, message *m) {
   jobject res;
+  jlong jsent, jleft, jelapsed, jeta;
   struct hydra_attempts_info *attempts_info;
   
   attempts_info = (struct hydra_attempts_info *) m->data;
   
+  if(attempts_info->sent > INT64_MAX) {
+    LOGW("%s: sent logins exceed maximum Java long value", __func__);
+  }
+  
+  if(attempts_info->left > INT64_MAX) {
+    LOGW("%s: left logins exceed maximum Java long value", __func__);
+  }
+  
+  jsent = attempts_info->sent;
+  jleft = attempts_info->left;
+  jelapsed = attempts_info->elapsed;
+  jeta = attempts_info->eta;
+  
   res = (*env)->NewObject(env,
                         cache.csploit.events.attempts.class,
                         cache.csploit.events.attempts.ctor,
-                        attempts_info->sent, attempts_info->left,
-                        attempts_info->rate, attempts_info->elapsed,
-                        attempts_info->eta);
+                        jsent, jleft, jelapsed, jeta);
   
   if((*env)->ExceptionCheck(env)) {
     (*env)->ExceptionDescribe(env);
@@ -549,7 +562,8 @@ jobject create_login_event(JNIEnv *env, message *m) {
   res = (*env)->NewObject(env,
                           cache.csploit.events.login.class,
                           cache.csploit.events.login.ctor,
-                          login_info->port, addr, jlogin, jpswd);
+                          (jint)(login_info->port), addr,
+                          jlogin, jpswd);
   
   cleanup:
   
@@ -585,12 +599,15 @@ jobject create_packet_event(JNIEnv *env, message *m) {
   if(!src) return NULL;
   
   dst = inaddr_to_inetaddress(env, packet_info->dst);
-  if(!dst) return NULL;
+  if(!dst) {
+    (*env)->DeleteLocalRef(env, src);
+    return NULL;
+  }
   
   res = (*env)->NewObject(env,
                           cache.csploit.events.packet.class,
                           cache.csploit.events.packet.ctor,
-                          src, dst, packet_info->len);
+                          src, dst, (jint)(packet_info->len));
   
   (*env)->DeleteLocalRef(env, src);
   (*env)->DeleteLocalRef(env, dst);
