@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <signal.h>
 
 #include "log.h"
 #include "init.h"
@@ -38,6 +39,7 @@
 #include "auth.h"
 #include "logger.h"
 #include "fini.h"
+#include "crash.h"
 
 #define NUMELEM(a) (sizeof(a)/sizeof(a[0]))
 
@@ -61,7 +63,6 @@ int init_controls() {
   return 0;
 }
 
-
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pVm, void* reserved _U_) {
   JNIEnv *env;
   jint ret;
@@ -77,6 +78,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pVm, void* reserved _U_) {
     { "isAuthenticated", "()Z", is_authenticated },
     { "getHandlers", "()[Ljava/lang/String;", get_handlers },
     { "Shutdown", "()V", request_shutdown },
+    { "hadCrashed", "()Z", have_crash_flag },
   };
   
   ret = (*pVm)->GetEnv(pVm, (void **)&env, JNI_VERSION_1_6);
@@ -88,6 +90,11 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* pVm, void* reserved _U_) {
   
   init_structs();
   set_logger(android_logger);
+  
+  if(register_crash_handler()) {
+   LOGF("%s: cannot register crash handler", __func__);
+   goto error;
+  }
   
   if(init_controls()) {
     LOGF("%s: cannot init controls", __func__);
