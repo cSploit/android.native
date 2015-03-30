@@ -82,11 +82,11 @@ check_ndk() {
 }
 
 delete_core_packages() {
-  find ../dist/ -name "core*" -type f -exec rm "{}" \;
+  find ../dist/ -name "core*" -type f -exec rm "{}" \; 2>&3
 }
 
 delete_ruby_packages() {
-  find ../dist/ -name "ruby*" -type f -exec rm "{}" \;
+  find ../dist/ -name "ruby*" -type f -exec rm "{}" \; 2>&3
 }
 
 build() {
