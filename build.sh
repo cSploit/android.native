@@ -5,6 +5,7 @@ oldpwd=$(pwd)
 UPDATE_SERVER="http://update.csploit.org/"
 RUBY_VERSION=1.0.0
 CORE_VERSION=1.0.1
+DEBUG=false
 
 die() {
 	echo "FAILED"
@@ -88,21 +89,23 @@ delete_ruby_packages() {
   find ../dist/ -name "ruby*" -type f -exec rm "{}" \;
 }
 
-build_core() {
+build() {
   app_root=$(readlink -f ../)
   
-  ndk_args="APP_OPTIM=debug NDK_DEBUG=1 " # debug
+  ndk_args=""
+  
+  test "x$DEBUG" == "xtrue" && ndk_args+="APP_OPTIM=debug NDK_DEBUG=1 " # debug
   ndk_args+="APP_PLATFORM=android-${api} " # force android api level 
   ndk_args+="NDK_OUT=${app_root}/obj/android-${api} " # objects directory
 
   echo
-  echo -n "[core] compiling for android-${api}..."
+  echo -n "[$pkg] compiling for android-${api}..."
   
   cpus=$(grep -E "^processor" /proc/cpuinfo | wc -l)
   
-  echo "running: ndk-build $ndk_args -j${cpus}" >&3
+  echo "running: ndk-build $ndk_args -j${cpus} $@" >&3
   
-  ndk-build $ndk_args -j${cpus} >&3 2>&1 || die
+  ndk-build $ndk_args -j${cpus} $@ >&3 2>&1 || die
   
   echo "ok"
 }
@@ -118,21 +121,11 @@ select_lower_api() {
 build_jni_libs() {
   app_root=$(readlink -f ../)
   
-  ndk_args="APP_OPTIM=debug NDK_DEBUG=1 " # debug
-  ndk_args+="APP_PLATFORM=android-${api} " # force android api level 
-  ndk_args+="NDK_OUT=${app_root}/obj/android-${api} " # objects directory
-  
-  ndk_targets="cSploitCommon cSploitClient"
-  
   strip=$( ndk-which strip ) 2>&3 || die
-
-  echo -n "[jni] compiling for android-${api}..."
   
-  cpus=$(grep -E "^processor" /proc/cpuinfo | wc -l)
+  build cSploitCommon cSploitClient
   
-  ndk-build $ndk_args -j${cpus} $ndk_targets >&3 2>&1 || die
-  
-  echo -ne "ok\n[jni] installing into libs..."
+  echo -ne "[jni] installing into libs..."
   
   for abi in $abis; do 
     objs="${app_root}/obj/android-${api}/local/${abi}"
@@ -244,7 +237,7 @@ build_cores() {
   delete_core_packages
   
   for api in $apis; do
-    build_core
+    build
     for abi in $abis; do
       pack_core
     done
@@ -256,7 +249,7 @@ build_ruby() {
   delete_ruby_packages
   
   for api in $apis; do
-    build_core
+    build
     for abi in $abis; do
       pack_ruby
     done
