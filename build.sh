@@ -138,6 +138,8 @@ build_jni_libs() {
     objs="${app_root}/obj/android-${api}/local/${abi}"
     bins=$(readlink -fm ../libs/${abi})
     
+    mkdir -p "${bins}"
+    
     for lib in cSploitCommon cSploitClient; do
       install -p "${objs}/lib${lib}.so" "${bins}/lib${lib}.so" >&3 2>&1 || die
       ${strip} --strip-unneeded "${bins}/lib${lib}.so" >&3 2>&1 || die
@@ -154,7 +156,7 @@ copy_jni_libs() {
   echo -n "[jni] copying libs to java project..."
   
   for abi in $abis; do
-    javaLibs=$(readlink -fm ../src/main/jniLibs/${abi}/)
+    javaLibs=$(readlink -fm ../src/org/csploit/android/jniLibs/${abi}/)
     bins=$(readlink -fm ../libs/${abi})
     
     { test -d "${javaLibs}" || mkdir -p "${javaLibs}" ;} >&3 2>&1 || die
