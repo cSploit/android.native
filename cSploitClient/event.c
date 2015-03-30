@@ -632,6 +632,7 @@ jobject create_fusebind_event(JNIEnv *env, message *m) {
   struct fusemount_bind_info *bind_info;
   
   bind_info = (struct fusemount_bind_info *) m->data;
+  res = NULL;
   jsrc = jmnt = NULL;
   
   src = string_array_next(m, bind_info->data, NULL);
