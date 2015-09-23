@@ -186,31 +186,47 @@ jobject inaddr_to_inetaddress(JNIEnv *env, in_addr_t a) {
 
 /**
  * @brief create an org.csploit.android.events.Hop
- * @param arg a pointer to an ::nmap_hop_info
+ * @param m a pointer to the received message
  * @returns the jobject on success, NULL on error.
  */
-jobject create_hop_event(JNIEnv *env, void *arg) {
+jobject create_hop_event(JNIEnv *env, message *m) {
   jobject addr, res;
+  jstring jname;
   struct nmap_hop_info *hop_info;
+  char *pos;
   
-  hop_info = (struct nmap_hop_info*)arg;
+  hop_info = (struct nmap_hop_info*) m->data;
+  jname = NULL;
+  res = NULL;
   
   addr = inaddr_to_inetaddress(env, hop_info->address);
   
   if(!addr)
     return NULL;
   
+  pos = string_array_next(m, hop_info->name, NULL);
+  
+  if(pos) {
+    jname = (*env)->NewStringUTF(env, pos);
+    if(!jname) goto cleanup;
+  }
+  
   res = (*env)->NewObject(env,
                           cache.csploit.events.hop.class,
                           cache.csploit.events.hop.ctor,
-                          hop_info->hop, (jlong)(hop_info->usec), addr);
-  
-  (*env)->DeleteLocalRef(env, addr);
+                          hop_info->hop, (jlong)(hop_info->usec), addr, jname);
+                          
+  cleanup:
   
   if(!res && (*env)->ExceptionCheck(env)) {
     (*env)->ExceptionDescribe(env);
     (*env)->ExceptionClear(env);
   }
+  
+  if(jname)
+    (*env)->DeleteLocalRef(env, jname);
+    
+  (*env)->DeleteLocalRef(env, addr);
   
   return res;
 }
