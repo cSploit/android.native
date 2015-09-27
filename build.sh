@@ -362,12 +362,14 @@ pack_ruby() {
 
 pkg="jni"
 
-test "$#" -ne 1 || pkg=$1
+test "$#" -eq 0 || pkg=$1
 
 case $pkg in
-ruby) build_ruby
+ruby) RUBY_VERSION=${2:-$RUBY_VERSION}
+      build_ruby
   ;;
-core|cores) build_cores
+core|cores) CORE_VERSION=${2:-$CORE_VERSION}
+            build_cores
             copy_jni_libs
   ;;
 jni) build_jni
@@ -375,7 +377,7 @@ jni) build_jni
   ;;
 *)
   scriptname=$(basename "$0")
-  echo -e "Usage: $scriptname <task>\n\ntask must be one of:\n  - ruby : build the ruby archive\n  - cores: build native tools used by cSploit (default)" >&2
+  echo -e "Usage: $scriptname <task> [version]\n\ntask must be one of:\n  - ruby : build the ruby archive\n  - cores: build native tools used by cSploit (default)" >&2
   ;;
 esac
 
