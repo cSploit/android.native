@@ -206,6 +206,9 @@ pack_core() {
   for f in $nmap_data; do
     cp "${jni_root}/nmap/$f" "${out}/tools/nmap/" >&3 2>&1 || die
   done
+  
+  # strip out useless data
+  sed -i -E '/^unknown/d;/^\s*#/d' "${out}/tools/nmap/nmap-services" >&3 2>&1 || die
 
   mkdir -p "${out}/tools/ettercap/share" || die
 
