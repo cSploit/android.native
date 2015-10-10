@@ -153,7 +153,7 @@ void disconnect_unix(JNIEnv *env, jclass clazz _U_) {
   stop_notifier();
   
   pthread_mutex_lock(&write_lock);
-  shutdown(sockfd, SHUT_WR);
+  shutdown(sockfd, SHUT_RDWR);
   pthread_mutex_unlock(&write_lock);
   
   stop_reader();
