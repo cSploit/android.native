@@ -172,7 +172,7 @@ jobject inaddr_to_inetaddress(JNIEnv *env, in_addr_t a) {
   (*env)->SetByteArrayRegion(env, ary, 0, sizeof(a), (const jbyte *) &a);
   
   res = (*env)->CallStaticObjectMethod(env, cache.java.net.inetaddress.class,
-                                       cache.java.net.inetaddress.getByAddress, NULL, ary, 0);
+                                       cache.java.net.inetaddress.getByAddress, NULL, ary);
   
   (*env)->DeleteLocalRef(env, ary);
   

@@ -172,7 +172,7 @@ int init_java_net_inetaddress_cache(JNIEnv *env) {
     return -1;
   
   c->getByAddress = (*env)->GetStaticMethodID(env, c->class,
-                                       "getByAddress", "(Ljava/lang/String;[BI)Ljava/net/InetAddress;");
+                                       "getByAddress", "(Ljava/lang/String;[B)Ljava/net/InetAddress;");
   
   if(!c->getByAddress) goto error;
   
