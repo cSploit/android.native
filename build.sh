@@ -344,6 +344,10 @@ pack_ruby() {
   mv "${rubyroot}/bin/ruby" "${rubyroot}/bin/ruby.arm" >&3 2>&1 || die
   ln -s "${system_ruby}" "${rubyroot}/bin/ruby" >&3 2>&1 || die
   $system_ruby "${rubyroot}/bin/gem" "update" "--system" "--no-ri" "--no-rdoc" "-V" >&3 2>&1 || die
+  
+  echo -ne "ok\n[ruby]   - installing bundler..."
+  $system_ruby "${rubyroot}/bin/gem" "install" "bundler" "--no-ri" "--no-rdoc" "--bindir=${rubyroot}/bin" "-V" >&3 2>&1 || die
+  
   rm "${rubyroot}/bin/ruby" >&3 2>&1 || die
   rm "${rubyroot}/lib/ruby/1.9.1/rbconfig.rb" >&3 2>&1 || die
   rm -rf "${rubyroot}/home/ruby/.gem" >&3 2>&1 || die
