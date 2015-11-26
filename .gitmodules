@@ -15,7 +15,7 @@
 	url = https://github.com/tux-mind/platform_external_freetds.git
 [submodule "hydra"]
 	path = hydra
-	url = https://github.com/vanhauser-thc/thc-hydra.git
+	url = https://github.com/tux-mind/thc-hydra.git
 [submodule "libbthread"]
 	path = libbthread
 	url = https://github.com/tux-mind/libbthread.git
