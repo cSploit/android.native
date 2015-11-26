@@ -16,10 +16,11 @@
  */
 #include <string.h>
 
+#include <csploit/message.h>
+#include <csploit/logger.h>
+
 #include "handler.h"
-#include "logger.h"
 #include "msfrpcd.h"
-#include "message.h"
 
 handler handler_info = {
   NULL,                       // next

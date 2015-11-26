@@ -20,12 +20,13 @@
 #include <errno.h>
 #include <string.h>
 
-#include "control_messages.h"
+#include <csploit/control_messages.h>
+#include <csploit/list.h>
+#include <csploit/control.h>
+#include <csploit/message.h>
+#include <csploit/sequence.h>
+
 #include "controller.h"
-#include "list.h"
-#include "control.h"
-#include "message.h"
-#include "sequence.h"
 #include "log.h"
 #include "connection.h"
 #include "auth.h"

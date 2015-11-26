@@ -21,9 +21,9 @@
 #include <jni.h>
 #include <arpa/inet.h>
 
-#include "list.h"
-#include "control.h"
-#include "buffer.h"
+#include <csploit/list.h>
+#include <csploit/control.h>
+#include <csploit/buffer.h>
 
 struct handler;
 

@@ -20,7 +20,7 @@
 #define EVENT_H
 
 #include <jni.h>
-#include "message.h"
+#include <csploit/message.h>
 
 
 jobject create_newline_event(JNIEnv *, void *);

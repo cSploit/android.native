@@ -19,15 +19,17 @@
 #include <jni.h>
 #include <stddef.h>
 
-#include "control_messages.h"
-#include "message.h"
+#include <csploit/control_messages.h>
+#include <csploit/message.h>
+#include <csploit/control.h>
+#include <csploit/sequence.h>
+#include <csploit/str_array.h>
+
 #include "command.h"
 #include "log.h"
-#include "control.h"
 #include "connection.h"
-#include "sequence.h"
 #include "controller.h"
-#include "str_array.h"
+
 
 #include "auth.h"
 

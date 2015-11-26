@@ -21,8 +21,8 @@
 #include <stdint.h>
 #include <jni.h>
 
-#include "list.h"
-#include "control.h"
+#include <csploit/list.h>
+#include <csploit/control.h>
 
 typedef struct handler {
   node *next;

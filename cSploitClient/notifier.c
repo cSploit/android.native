@@ -21,7 +21,8 @@
 #include <errno.h>
 #include <string.h>
 
-#include "buffer.h"
+#include <csploit/buffer.h>
+#include <csploit/control_messages.h>
 
 #include "log.h"
 #include "reader.h"
@@ -30,7 +31,6 @@
 #include "controller.h"
 #include "cache.h"
 #include "handler.h"
-#include "control_messages.h"
 
 #include "nmap.h"
 #include "ettercap.h"

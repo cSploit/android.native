@@ -18,7 +18,7 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-#include "message.h"
+#include <csploit/message.h>
 
 int on_command(JNIEnv *, message *);
 int start_blind_command(JNIEnv *, jclass, jstring);

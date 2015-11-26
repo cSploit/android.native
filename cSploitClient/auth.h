@@ -20,7 +20,7 @@
 
 #include <jni.h>
 
-#include "control.h"
+#include <csploit/control.h>
 
 int on_auth_status(message *);
 inline int authenticated(void);

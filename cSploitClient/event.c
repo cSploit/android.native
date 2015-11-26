@@ -21,10 +21,11 @@
 #include <errno.h>
 #include <string.h>
 
+#include <csploit/str_array.h>
+
 #include "log.h"
 #include "cache.h"
 #include "child.h"
-#include "str_array.h"
 
 #include "nmap.h"
 #include "hydra.h"

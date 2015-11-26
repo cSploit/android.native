@@ -18,11 +18,12 @@
 #include <string.h>
 #include <regex.h>
 
+#include <csploit/message.h>
+#include <csploit/str_array.h>
+#include <csploit/logger.h>
+
 #include "handler.h"
-#include "logger.h"
 #include "fusemounts.h"
-#include "message.h"
-#include "str_array.h"
 
 handler handler_info = {
   NULL,                           // next

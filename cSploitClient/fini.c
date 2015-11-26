@@ -16,7 +16,8 @@
  * 
  */
 
-#include "control.h"
+#include <csploit/control.h>
+
 #include "cache.h"
 #include "child.h"
 #include "reader.h"

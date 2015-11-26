@@ -24,7 +24,7 @@ LOCAL_SHARED_LIBRARIES:= cSploitCommon
 LOCAL_LDLIBS:= -llog
 
 LOCAL_C_INCLUDES:= \
-  cSploitCommon/ \
+  cSploitCommon/include \
   cSploitHandlers/
   
 LOCAL_SRC_FILES:= $(wildcard $(LOCAL_PATH)/*.c)

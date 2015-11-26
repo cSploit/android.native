@@ -20,11 +20,12 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 
+#include <csploit/logger.h>
+#include <csploit/message.h>
+#include <csploit/str_array.h>
+
 #include "handler.h"
-#include "logger.h"
 #include "network-radar.h"
-#include "message.h"
-#include "str_array.h"
 
 handler handler_info = {
   NULL,                                     // next

@@ -19,8 +19,9 @@
 #include <android/log.h>
 #include <pthread.h>
 
+#include <csploit/logger.h>
+
 #include "log.h"
-#include "logger.h"
 
 void android_logger(int level, char *fmt, ...) {
   va_list argptr;

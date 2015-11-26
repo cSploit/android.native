@@ -26,6 +26,9 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#include <csploit/msgqueue.h>
+#include <csploit/logger.h>
+
 #include "log.h"
 #include "init.h"
 #include "cache.h"
@@ -35,9 +38,7 @@
 #include "controller.h"
 #include "reader.h"
 #include "child.h"
-#include "msgqueue.h"
 #include "auth.h"
-#include "logger.h"
 #include "fini.h"
 #include "crash.h"
 

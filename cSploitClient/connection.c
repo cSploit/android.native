@@ -26,8 +26,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include <csploit/control.h>
+
 #include "log.h"
-#include "control.h"
 #include "reader.h"
 #include "notifier.h"
 #include "handler.h"

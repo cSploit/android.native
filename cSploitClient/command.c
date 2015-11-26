@@ -19,18 +19,18 @@
 #include <pthread.h>
 #include <errno.h>
 
-#include "message.h"
+#include <csploit/message.h>
+#include <csploit/control_messages.h>
+#include <csploit/sequence.h>
+#include <csploit/str_array.h>
 
 #include "child.h"
 #include "connection.h"
 #include "event.h"
 #include "log.h"
-#include "control_messages.h"
 #include "handler.h"
-#include "sequence.h"
 #include "controller.h"
 #include "auth.h"
-#include "str_array.h"
 
 #include "command.h"
 

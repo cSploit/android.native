@@ -21,7 +21,8 @@
 #include <errno.h>
 #include <string.h>
 
-#include "control_messages.h"
+#include <csploit/control_messages.h>
+
 #include "log.h"
 #include "connection.h"
 

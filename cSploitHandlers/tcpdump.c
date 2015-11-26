@@ -20,10 +20,11 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 
+#include <csploit/logger.h>
+#include <csploit/message.h>
+
 #include "handler.h"
-#include "logger.h"
 #include "tcpdump.h"
-#include "message.h"
 #include "common_regex.h"
 
 handler handler_info = {

@@ -25,11 +25,12 @@
 #include <stddef.h>
 #include <math.h>
 
+#include <csploit/message.h>
+#include <csploit/str_array.h>
+#include <csploit/logger.h>
+
 #include "handler.h"
-#include "logger.h"
 #include "hydra.h"
-#include "message.h"
-#include "str_array.h"
 
 handler handler_info = {
   NULL,                   // next

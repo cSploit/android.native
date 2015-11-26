@@ -20,7 +20,7 @@
 #ifndef READER_H
 #define READER_H
 
-#include "msgqueue.h"
+#include <csploit/msgqueue.h>
 
 int start_reader(void);
 void stop_reader(void);

@@ -24,11 +24,12 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include <csploit/logger.h>
+#include <csploit/message.h>
+#include <csploit/str_array.h>
+
 #include "handler.h"
-#include "logger.h"
 #include "ettercap.h"
-#include "message.h"
-#include "str_array.h"
 #include "common_regex.h"
 
 handler handler_info = {

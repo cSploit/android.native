@@ -23,8 +23,9 @@
 
 #include "log.h"
 
-#include "message.h"
-#include "msgqueue.h"
+#include <csploit/message.h>
+#include <csploit/msgqueue.h>
+
 #include "connection.h"
 
 #include "reader.h"

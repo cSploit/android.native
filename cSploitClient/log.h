@@ -21,7 +21,7 @@
 
 #include <android/log.h>
 
-#include "message.h"
+#include <csploit/message.h>
 
 #define LOG_TAG "cSploitClient"
 
