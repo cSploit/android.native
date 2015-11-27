@@ -284,8 +284,6 @@ int parse_cmd(JNIEnv *env, handler *h, jstring jcmd, message *m) {
     goto jni_error;
   }
   
-  LOGD("%s: parsing \"%s\"", __func__, utf);
-  
   status = 0;
   arg_len = 0;
   escapes = 0;
@@ -349,8 +347,6 @@ int parse_cmd(JNIEnv *env, handler *h, jstring jcmd, message *m) {
     
     // copy the arg if found
     if(start && end) {
-      
-      LOGD("%s: argument found: start=%d, end=%d", __func__, (start-utf), (end-utf));
       arg_len=(end-start);
       arg_len-= escapes;
       
