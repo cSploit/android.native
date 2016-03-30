@@ -61,7 +61,8 @@ directories="/enc/trans/
 apis="9
 16"
 abis="armeabi
-armeabi-v7a"
+armeabi-v7a
+arm64-v8a"
 
 check_ndk() {
   ndk_build=$(which ndk-build) || \
