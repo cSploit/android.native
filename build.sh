@@ -119,6 +119,20 @@ select_lower_api() {
   done
 }
 
+# this is a temporary fix to https://github.com/android-ndk/ndk/issues/56
+# $1: path to translate
+# $2: target ABI
+from_armeabi_to_another_abi() {
+  case $2 in
+    arm64-*)
+      sed -E 's/arm-linux-androideabi-[0-9.]+/aarch64-linux-android-4.9/;s/arm-linux-androideabi-/aarch64-linux-android-/' <<<$1
+      ;;
+    *)
+      echo $1
+      ;;
+  esac
+}
+
 build_jni_libs() {
   app_root=$(readlink -f ../)
   
@@ -133,10 +147,13 @@ build_jni_libs() {
     bins=$(readlink -fm ../libs/${abi})
     
     mkdir -p "${bins}"
+
+    strip_abi=$(from_armeabi_to_another_abi $strip $abi)
     
     for lib in cSploitCommon cSploitClient; do
       install -p "${objs}/lib${lib}.so" "${bins}/lib${lib}.so" >&3 2>&1 || die
-      ${strip} --strip-unneeded "${bins}/lib${lib}.so" >&3 2>&1 || die
+
+      ${strip_abi} --strip-unneeded "${bins}/lib${lib}.so" >&3 2>&1 || die
     done
   done
   
